@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kredittkort-oppgjør</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero card">
+      <div>
+        <h1>Kredittkort-oppgjør</h1>
+        <p>
+          Last opp SEB- eller Bank Norwegian-filer. Appen kategoriserer transaksjoner,
+          summerer per person/kategori og lagrer regler lokalt i nettleseren.
+        </p>
+      </div>
+      <div class="actions">
+        <label class="button primary">
+          Last opp Excel-filer
+          <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" multiple hidden />
+        </label>
+        <button id="exportBtn" class="button secondary" disabled>Eksporter resultat</button>
+        <button id="rerunBtn" class="button secondary" disabled>Kjør regler på nytt</button>
+        <button id="resetBtn" class="button danger">Nullstill</button>
+      </div>
+      <div id="status" class="status">Last opp Excel-filer for å starte.</div>
+      <div class="notice">
+        Alt lagres kun i denne nettleseren. På en annen PC/iPad må filene lastes opp på nytt.
+      </div>
+    </header>
+
+    <section class="layout-top">
+      <section class="card">
+        <h2>Nøkkeltall</h2>
+        <div id="stats" class="stats"></div>
+      </section>
+
+      <section class="card">
+        <h2>Opplastede transaksjonslister</h2>
+        <div id="sourceList" class="source-list"></div>
+      </section>
+    </section>
+
+    <main class="layout-main">
+      <section class="card transactions-card">
+        <div class="section-header">
+          <h2>Transaksjoner</h2>
+          <div class="tabs">
+            <button id="tabList" class="tab active">Liste</button>
+            <button id="tabSummary" class="tab">Oppsummering</button>
+          </div>
+        </div>
+
+        <div id="listPanel">
+          <div class="filters">
+            <input id="searchInput" type="search" placeholder="Søk etter dato, tekst, sted, fil eller kategori" />
+            <select id="monthSelect">
+              <option value="alle">Alle måneder</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dato</th>
+                  <th>Beskrivelse</th>
+                  <th>Beløp NOK</th>
+                  <th>Beløp valuta</th>
+                  <th>Kategori</th>
+                  <th>Handling</th>
+                </tr>
+              </thead>
+              <tbody id="transactionBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="summaryPanel" class="hidden">
+          <div class="summary-grid">
+            <div class="summary-box">
+              <h3>Per person</h3>
+              <div id="peopleSummary"></div>
+            </div>
+            <div class="summary-box">
+              <h3>Andre kategorier</h3>
+              <div id="categorySummary"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <section class="card">
+          <h2>Regler for gjentakende transaksjoner</h2>
+          <div class="rule-form">
+            <input id="ruleText" type="text" placeholder="F.eks. rema, klarna, flytoget" />
+            <select id="ruleBucket"></select>
+            <button id="addRuleBtn" class="button primary">Legg til</button>
+          </div>
+          <div id="rulesList" class="list-stack"></div>
+        </section>
+
+        <section class="card">
+          <h2>Vanlige gjengangere</h2>
+          <div id="recurringList" class="list-stack"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
